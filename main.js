@@ -18,7 +18,7 @@ async function example() {
     // Step 1: Read entire CSV to JSON array
     console.log('Step 1: Reading CSV to JSON array');
     console.log('=========================================');
-    const data = await reader.readToJSON('../07-nov/analisis.csv');
+    const data = await reader.readToJSON('../11-nov.csv');
     console.log('Data:', data);
     console.log('\n');
     // Step 2: Grouping by document_number (if needed)
@@ -29,11 +29,11 @@ async function example() {
       const existing = groupedData.findIndex(r => r.document_number === row.document_number);
       if (existing === -1) {
         const merchants_id = [row.merchant_id];
+        delete row.merchant_id;
         groupedData.push({...row, merchants_id});
       } else {
         groupedData[existing] = { ...groupedData[existing], merchants_id: [...groupedData[existing].merchants_id, row.merchant_id]};
       }
-      delete row.merchant_id;
     });
     console.log('Grouped Data:', groupedData);
     // Step 3: Generate SQL query using QueryGenerator

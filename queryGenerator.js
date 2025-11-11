@@ -1,3 +1,5 @@
+const { document_type_code, document_type_id, person_type_id } = require('./constants');
+
 class QueryGenerator {
     getQuery(params) {
         switch (params.strategy) {
@@ -21,7 +23,7 @@ WITH new_owner AS (
 UPDATE core_merchant.sch_core.t_com_merchant_management mm
 SET
     owner_id = no.com_owner_id,
-    document_type_code = '2',
+    document_type_code = '${document_type_code[params.document_type]}',
     document_number = '${params.document_number}',
     user_updated = 'tania.guizado@culqi.com',
     updated_date = NOW()
@@ -54,23 +56,23 @@ WITH new_owner AS (
         document_type_code
     )
     VALUES (
-        -1800,
+        ${document_type_id[params.document_type]},
         '${params.business_name}',
         '${params.document_number}',
-        -1669,
+        ${person_type_id[params.document_type]},
         '1',
         -1677,
         NOW(),
         'tania.guizado@culqi.com',
-        '2',
-        'CE'
+        '${document_type_code[params.document_type]}',
+        '${params.document_type}'
     )
     RETURNING com_owner_id
 )
 UPDATE core_merchant.sch_core.t_com_merchant_management mm
 SET
     owner_id = no.com_owner_id,
-    document_type_code = '2',
+    document_type_code = '${document_type_code[params.document_type]}',
     document_number = '${params.document_number}',
     user_updated = 'tania.guizado@culqi.com',
     updated_date = NOW()
