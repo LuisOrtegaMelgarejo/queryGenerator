@@ -5,7 +5,22 @@ const QueryGenerator = require('./queryGenerator');
  * Example usage of CSVReader
  */
 
-async function example() {
+const mapperMonth = {
+  1: 'ene',
+  2: 'feb',
+  3: 'mar',
+  4: 'abr',
+  5: 'may',
+  6: 'jun',
+  7: 'jul',
+  8: 'ago',
+  9: 'sep',
+  10: 'oct',
+  11: 'nov',
+  12: 'dic'
+};
+
+async function queryGenerator() {
   // Create a new CSV reader instance
   const reader = new CSVReader({
     delimiter: ';',
@@ -18,7 +33,7 @@ async function example() {
     // Step 1: Read entire CSV to JSON array
     console.log('Step 1: Reading CSV to JSON array');
     console.log('=========================================');
-    const data = await reader.readToJSON('../11-nov.csv');
+    const data = await reader.readToJSON(`../${process.argv[2] || ((new Date().getDate()) + '-' + mapperMonth[new Date().getMonth() + 1])}.csv`);
     console.log('Data:', data);
     console.log('\n');
     // Step 2: Grouping by document_number (if needed)
@@ -41,7 +56,7 @@ async function example() {
     console.log('=========================================');
     const sqlQueries = groupedData.map((row) => {
       const query = queryGenerator.getQuery(row);
-      const fileName = process.argv[2] || 'C2ADGCS';
+      const fileName = process.argv[3] || 'C2ADGCS';
       require('fs').writeFileSync(`./output/${fileName}-${row.merchants_id.join('_')}-${row.document_type}.sql`, query + '\n');
     });
   } catch (error) {
@@ -51,7 +66,7 @@ async function example() {
 
 // Run the example
 if (require.main === module) {
-  example();
+  queryGenerator();
 }
 
-module.exports = example;
+module.exports = queryGenerator;
