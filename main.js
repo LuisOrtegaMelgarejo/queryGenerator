@@ -1,5 +1,7 @@
 const CSVReader = require('./csvReader');
 const QueryGenerator = require('./queryGenerator');
+const fs = require('fs');
+const path = require('path');
 
 /**
  * Example usage of CSVReader
@@ -64,6 +66,10 @@ async function queryGenerator() {
     // Step 3: Generate SQL query using QueryGenerator
     console.log('Step 3: Generating SQL query');
     console.log('=========================================');
+    const dir = path.join('..', filename);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
     groupedData.map((row) => {
       const query = queryGenerator.getQuery(row);
       require('fs').writeFileSync(`../${filename}/C2ADGCS-${row.ticket??'DEFAULT'}-${row.merchants_id.join('_')}-${row.document_type}.sql`, query + '\n');

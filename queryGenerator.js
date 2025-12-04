@@ -143,8 +143,25 @@ SET
     user_updated = 'tania.guizado@culqi.com',
     updated_date = NOW()
 FROM new_hierarchy_id nh
-WHERE mm.merchant_id IN (${params.merchants_id.map(id => `'${id}'`).join(",")});`;
+WHERE mm.merchant_id IN (${params.merchants_id.map(id => `'${id}'`).join(",")});
+
+WITH new_hierarchy_id AS (
+    SELECT
+        parent_node_id
+    FROM core_merchant.sch_core.t_com_merchant_management 
+    WHERE merchant_id IN (${params.merchants_id.map(id => `'${id}'`).join(",")}
+    LIMIT 1
+)
+UPDATE core_merchant.sch_core.t_user_hierarchy
+SET
+    jer_business_hierarchy_id = nh.parent_node_id,
+    updated_date = NOW()
+FROM new_hierarchy_id nh
+WHERE merchant_id IN (${params.merchants_id.map(id => `'${id}'`).join(",")});
+`;
     }
 }
 
 module.exports = QueryGenerator;
+
+161949
