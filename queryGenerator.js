@@ -149,7 +149,7 @@ WITH new_hierarchy_id AS (
     SELECT
         parent_node_id
     FROM core_merchant.sch_core.t_com_merchant_management 
-    WHERE merchant_id IN (${params.merchants_id.map(id => `'${id}'`).join(",")}
+    WHERE merchant_id IN (${params.merchants_id.map(id => `'${id}'`).join(",")})
     LIMIT 1
 )
 UPDATE core_merchant.sch_core.t_user_hierarchy
