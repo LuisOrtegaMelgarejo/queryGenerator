@@ -155,7 +155,7 @@ WITH new_hierarchy_id AS (
 UPDATE core_merchant.sch_core.t_user_hierarchy
 SET
     jer_business_hierarchy_id = nh.parent_node_id,
-    updated_date = NOW()
+    updated_at = NOW()
 FROM new_hierarchy_id nh
 WHERE merchant_id IN (${params.merchants_id.map(id => `'${id}'`).join(",")});
 `;
